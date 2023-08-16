@@ -130,3 +130,13 @@ dmypy.json
 
 # .idea
 .idea
+
+# VSC
+/.vscode/
+.vscode/
+
+media/
+
+sent_emails/
+/sent_emails/
+**/sent_emails/*
