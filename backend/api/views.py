@@ -88,30 +88,36 @@ class CustomUserViewSet(
         permission_classes=[IsAuthenticated],
     )
     def subscribe(self, request, pk):
-        "Этот метод позволяет текущему пользователю подписаться"
-        "или отписаться от другого пользователя."
+        """Этот метод позволяет текущему пользователю подписаться"""
+        """или отписаться от другого пользователя."""
+
         author = get_object_or_404(User, id=pk)
         subscription = Subscription.objects.filter(
             user=request.user, author=author
         )
-        if request.method == 'DELETE' and not subscription:
-            return Response(
-                {'errors': 'Подписка уже удалена.'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+
         if request.method == 'DELETE':
+            if not subscription:
+                return Response(
+                    {'errors': 'Подписка уже удалена.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+
         if subscription:
             return Response(
                 {'errors': 'Вы уже подписаны на этого автора.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
         if author == request.user:
             return Response(
                 {'errors': 'Вы не можете подписаться на самого себя.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
         Subscription.objects.create(user=request.user, author=author)
         serializer = SubscriptionSerializer(
             author,
@@ -221,20 +227,20 @@ class RecipeViewSet(ModelViewSet):
     )
     def download_shopping_cart(self, request):
         """Выгружаем список продуктов из корзины (формат txt)."""
+
         ingredients = (
             RecipeIngredients.objects.filter(
                 recipe__shopping_cart__user=request.user
-            )
-            .values(
+            ) .values(
                 'ingredient__name', 'ingredient__measurement_unit', 'amount'
-            )
-            .order_by('ingredient__name')
+            ).order_by('ingredient__name')
         )
         shopping_list = self.create_ingredient_list(ingredients)
         response = HttpResponse(shopping_list, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename={0}'.format(
             'Список_покупок.txt'
         )
+
         return response
 
     def create_ingredient_list(self, queryset) -> list:

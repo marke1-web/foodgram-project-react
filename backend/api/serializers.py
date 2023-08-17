@@ -113,7 +113,7 @@ class SubscriptionSerializer(CustomUserSerializer):
         """Определяем список рецептов в подписке."""
         recipes_limit = self.context['request'].GET.get('recipes_limit')
         if recipes_limit:
-            recipes = obj.recipes.all()[: int(recipes_limit)]
+            recipes = obj.recipes.all()[:int(recipes_limit)]
         else:
             recipes = obj.recipes.all()
         return RecipeListSerializer(recipes, many=True, read_only=True).data
@@ -152,14 +152,14 @@ class RecipeIngredientSerializer(ModelSerializer):
 
 
 class RecipeIngredientCreateSerializer(ModelSerializer):
-    """Сериализатор состава ингридиентов в создаваемом рецепте."""
+    """Сериализатор состава ингредиентов в создаваемом рецепте."""
 
-    id = IntegerField()
+    ingredient = PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     amount = IntegerField()
 
     class Meta:
         model = RecipeIngredients
-        fields = ('id', 'amount')
+        fields = ('ingredient', 'amount')
 
 
 class RecipeListSerializer(ModelSerializer):
