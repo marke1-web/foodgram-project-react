@@ -88,8 +88,9 @@ class CustomUserViewSet(
         permission_classes=[IsAuthenticated],
     )
     def subscribe(self, request, pk):
-        """Этот метод позволяет текущему пользователю подписаться"""
-        """или отписаться от другого пользователя."""
+        """Этот метод позволяет текущему пользователю подписаться
+        или отписаться от другого пользователя.
+        """
 
         author = get_object_or_404(User, id=pk)
         subscription = Subscription.objects.filter(
