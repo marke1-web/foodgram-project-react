@@ -228,11 +228,15 @@ class RecipeViewSet(ModelViewSet):
     def download_shopping_cart(self, request):
         """Выгружаем список продуктов из корзины (формат txt)."""
 
-        ingredients = RecipeIngredients.objects.filter(
-            recipe__shopping_cart__user=request.user
-        ).values(
-            'ingredient__name', 'ingredient__measurement_unit', 'amount'
-        ).order_by('ingredient__name')
+        ingredients = (
+            RecipeIngredients.objects.filter(
+                recipe__shopping_cart__user=request.user
+            )
+            .values(
+                'ingredient__name', 'ingredient__measurement_unit', 'amount'
+            )
+            .order_by('ingredient__name')
+        )
 
         shopping_list = self.create_ingredient_list(ingredients)
 
