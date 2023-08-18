@@ -244,7 +244,6 @@ class RecipeViewSet(ModelViewSet):
 
         return response
 
-
     def create_ingredient_list(self, queryset) -> list:
         """Доп.функция: создаем список продуктов по рецептам из корзины."""
         ingredient_data = defaultdict(int)
