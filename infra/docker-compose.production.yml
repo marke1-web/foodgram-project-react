@@ -26,7 +26,7 @@ services:
       - db
 
   frontend:
-    imgage: markeeee3/foodgram_frontend:latest
+    image: markeeee3/foodgram_frontend:latest
     env_file:
       - ../.env
     volumes:
